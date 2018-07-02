@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2035
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SensorApi", "SensorApi\SensorApi.csproj", "{E8ECFE6A-F13D-4710-948D-AB86C5677985}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E8ECFE6A-F13D-4710-948D-AB86C5677985}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8ECFE6A-F13D-4710-948D-AB86C5677985}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8ECFE6A-F13D-4710-948D-AB86C5677985}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8ECFE6A-F13D-4710-948D-AB86C5677985}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6AB05861-50E7-492E-BC3C-D56F3BEE21A1}
+	EndGlobalSection
+EndGlobal
