@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using SensorApi.Models;
 
 namespace SensorApi
 {
@@ -23,6 +25,8 @@ namespace SensorApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<TemperatureContext>(opt =>
+                opt.UseSqlite("Data Source=TemperatureList.db"));
             services.AddMvc();
         }
 
