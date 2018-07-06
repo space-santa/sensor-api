@@ -1,0 +1,19 @@
+FROM microsoft/dotnet:2.1-sdk AS base
+WORKDIR /app
+EXPOSE 80
+
+FROM microsoft/dotnet:2.1-sdk AS build
+WORKDIR /src
+COPY SensorApi/SensorApi.csproj SensorApi/
+RUN dotnet restore SensorApi/SensorApi.csproj
+COPY . .
+WORKDIR /src/SensorApi
+RUN dotnet build SensorApi.csproj -c Release -o /app
+
+FROM build AS publish
+RUN dotnet publish SensorApi.csproj -c Release -o /app
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app .
+ENTRYPOINT ["dotnet", "SensorApi.dll"]

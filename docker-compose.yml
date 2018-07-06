@@ -1,0 +1,12 @@
+version: '3.4'
+
+services:
+  sensorapi:
+    image: ${DOCKER_REGISTRY}sensorapi
+    build:
+      context: .
+      dockerfile: SensorApi/Dockerfile
+    ports:
+      - 4567:80
+    volumes:
+      - /c/Users/claus/tmp/sensor-api:/opt/db
