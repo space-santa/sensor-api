@@ -8,6 +8,7 @@ namespace SensorApi.Models
     public class TemperatureItem
     {
         public long Id { get; set; }
+        public string Device { get; set; }
         public double Temperature { get; set; }
         public DateTime Timestamp { get; set; }
     }
