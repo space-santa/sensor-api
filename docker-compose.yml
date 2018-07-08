@@ -9,4 +9,7 @@ services:
     ports:
       - 4567:80
     volumes:
-      - /c/Users/claus/tmp/sensor-api:/opt/db
+      - dbdata:/opt/db
+
+volumes:
+  dbdata:
