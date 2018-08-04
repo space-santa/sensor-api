@@ -32,13 +32,23 @@ namespace SensorApi.Controllers
         [HttpGet]
         public List<TemperatureItem> GetAll()
         {
+            return _context.TemperatureItems.ToList();
+        }
+
+        // GET: api/<controller>/latest
+        [HttpGet("latest", Name = "LatestTemperature")]
+        public List<TemperatureItem> GetLatest()
+        {
             var list = _context.TemperatureItems.ToList();
             List<TemperatureItem> retval = new List<TemperatureItem>();
 
-            for (int i = Math.Max(list.Count() - 20, 0); i < list.Count(); ++i)
+            System.Diagnostics.Debug.WriteLine($"Get the latest of {list.Count.ToString()}");
+            for (int i = Math.Max(list.Count() - 5, 0); i < list.Count(); ++i)
             {
-                retval.Append(list[i]);
+                retval.Add(list[i]);
+                System.Diagnostics.Debug.WriteLine($"at {i.ToString()}");
             }
+            System.Diagnostics.Debug.WriteLine($"result is of length {retval.Count.ToString()}");
 
             return retval;
         }
