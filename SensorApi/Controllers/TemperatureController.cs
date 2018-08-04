@@ -32,7 +32,15 @@ namespace SensorApi.Controllers
         [HttpGet]
         public List<TemperatureItem> GetAll()
         {
-            return _context.TemperatureItems.ToList();
+            var list = _context.TemperatureItems.ToList();
+            List<TemperatureItem> retval = new List<TemperatureItem>();
+
+            for (int i = Math.Max(list.Count() - 20, 0); i < list.Count(); ++i)
+            {
+                retval.Append(list[i]);
+            }
+
+            return retval;
         }
 
         // GET: api/<controller>/5
