@@ -26,6 +26,7 @@ namespace SensorApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<TemperatureContext>(opt =>
+                //opt.UseSqlite("Data Source=TemperatureList.db"));
                 opt.UseSqlite("Data Source=/opt/db/TemperatureList.db"));
             services.AddMvc();
         }
