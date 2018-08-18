@@ -8,9 +8,6 @@ services:
     ports:
       - 4567:80
     volumes:
-      - dbdata:/opt/db
+      - /opt/SensorApi/db:/opt/db
     environment:
       - DATA_SOURCE=/opt/db/sensor.db
-
-volumes:
-  dbdata:

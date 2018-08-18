@@ -6,9 +6,6 @@ services:
       context: ../..
       dockerfile: ./docker/Dockerfile.migrate
     volumes:
-      - dbdata:/opt/db
+      - /opt/SensorApi/db:/opt/db
     environment:
       - DATA_SOURCE=/opt/db/sensor.db
-
-volumes:
-  dbdata:
