@@ -2,14 +2,15 @@ version: '3.4'
 
 services:
   sensorapi:
-    image: ${DOCKER_REGISTRY}sensorapi
     build:
-      context: .
-      dockerfile: SensorApi/Dockerfile
+      context: ../..
+      dockerfile: ./docker/Dockerfile.production
     ports:
       - 4567:80
     volumes:
       - dbdata:/opt/db
+    environment:
+      - DATA_SOURCE=/opt/db/sensor.db
 
 volumes:
   dbdata:
