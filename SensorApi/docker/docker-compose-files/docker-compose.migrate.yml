@@ -1,0 +1,14 @@
+version: '3.4'
+
+services:
+  migration:
+    build:
+      context: ../..
+      dockerfile: ./docker/Dockerfile.migrate
+    volumes:
+      - dbdata:/opt/db
+    environment:
+      - DATA_SOURCE=/opt/db/sensor.db
+
+volumes:
+  dbdata:
