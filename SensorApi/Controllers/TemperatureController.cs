@@ -18,7 +18,6 @@ namespace SensorApi.Controllers
         public TemperatureController(TemperatureContext context)
         {
             _context = context;
-            context.Database.Migrate();
 
             if (_context.TemperatureItems.Count() == 0)
             {

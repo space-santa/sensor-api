@@ -1,0 +1,14 @@
+version: '3.4'
+
+services:
+  sensorapi:
+    restart: unless-stopped
+    build:
+      context: ../..
+      dockerfile: ./docker/Dockerfile.production
+    ports:
+      - 4567:80
+    volumes:
+      - /opt/SensorApi/db:/opt/db
+    environment:
+      - DATA_SOURCE=/opt/db/sensor.db

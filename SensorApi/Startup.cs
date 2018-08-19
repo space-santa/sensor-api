@@ -25,9 +25,15 @@ namespace SensorApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<TemperatureContext>(opt =>
-                //opt.UseSqlite("Data Source=TemperatureList.db"));
-                opt.UseSqlite("Data Source=/opt/db/TemperatureList.db"));
+            string dataSource = Environment.GetEnvironmentVariable("DATA_SOURCE");
+
+            if (dataSource == null) {
+                dataSource = "TemperatureList.db";
+            }
+
+            System.Diagnostics.Debug.WriteLine($"Data Source={dataSource}");
+
+            services.AddDbContext<TemperatureContext>(opt => opt.UseSqlite($"Data Source={dataSource}"));
             services.AddMvc();
         }
 

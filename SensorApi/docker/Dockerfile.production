@@ -4,10 +4,10 @@ EXPOSE 80
 
 FROM microsoft/dotnet:2.1-sdk AS build
 WORKDIR /src
-COPY SensorApi/SensorApi.csproj SensorApi/
-RUN dotnet restore SensorApi/SensorApi.csproj
+COPY SensorApi.csproj .
+RUN dotnet restore SensorApi.csproj
 COPY . .
-WORKDIR /src/SensorApi
+WORKDIR /src
 RUN dotnet build SensorApi.csproj -c Release -o /app
 
 FROM build AS publish
