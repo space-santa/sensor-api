@@ -2,6 +2,7 @@ version: '3.4'
 
 services:
   sensorapi:
+    restart: unless-stopped
     build:
       context: ../..
       dockerfile: ./docker/Dockerfile.production
