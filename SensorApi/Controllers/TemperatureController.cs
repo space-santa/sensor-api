@@ -43,7 +43,7 @@ namespace SensorApi.Controllers
             List<TemperatureItem> retval = new List<TemperatureItem>();
 
             System.Diagnostics.Debug.WriteLine($"Get the latest of {list.Count.ToString()}");
-            for (int i = Math.Max(list.Count() - 6, 0); i < list.Count(); ++i)
+            for (int i = Math.Max(list.Count() - 4, 0); i < list.Count(); ++i)
             {
                 retval.Add(list[i]);
                 System.Diagnostics.Debug.WriteLine($"at {i.ToString()}");
