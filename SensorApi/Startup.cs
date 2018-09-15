@@ -35,7 +35,16 @@ namespace SensorApi
 
             services.AddDbContext<TemperatureContext>(opt => opt.UseSqlite($"Data Source={dataSource}"));
             services.AddMvc();
-            services.AddCors();
+            services.AddCors(
+                options => options.AddPolicy("AllowCors",
+                builder =>
+                {
+                    builder
+                    .AllowAnyOrigin()
+                    .WithMethods("GET")
+                    .AllowAnyHeader();
+                })
+            );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +55,7 @@ namespace SensorApi
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors("AllowCors");
             app.UseMvc();
         }
     }

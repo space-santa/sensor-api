@@ -36,7 +36,7 @@ namespace SensorApi.Controllers
         }
 
         // GET: api/<controller>/latest
-        [EnableCors("AllowAllOrigin"), HttpGet("latest", Name = "LatestTemperature")]
+        [EnableCors("AllowCors"), HttpGet("latest", Name = "LatestTemperature")]
         public List<TemperatureItem> GetLatest()
         {
             var list = _context.TemperatureItems.ToList();
