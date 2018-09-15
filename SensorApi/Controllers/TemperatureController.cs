@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SensorApi.Models;
@@ -36,6 +37,7 @@ namespace SensorApi.Controllers
 
         // GET: api/<controller>/latest
         [HttpGet("latest", Name = "LatestTemperature")]
+        [EnableCors("AllowSpecificOrigin")]
         public List<TemperatureItem> GetLatest()
         {
             var list = _context.TemperatureItems.ToList();
