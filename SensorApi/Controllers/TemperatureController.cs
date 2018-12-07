@@ -30,9 +30,16 @@ namespace SensorApi.Controllers
 
         // GET: api/<controller>
         [HttpGet]
-        public List<TemperatureItem> GetAll()
+        public List<TemperatureItem> GetAll(DateTime startDate, string device)
         {
-            return _context.TemperatureItems.ToList();
+            var timeFilteredData = _context.TemperatureItems.Where(x => x.Timestamp >= startDate);
+
+            if (device?.Length > 0)
+            {
+                return timeFilteredData.Where(x => x.Device == device).ToList();
+            }
+
+            return timeFilteredData.ToList();
         }
 
         // GET: api/<controller>/latest
