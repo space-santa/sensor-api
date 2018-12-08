@@ -14,5 +14,6 @@ namespace SensorApi.Models
         }
 
         public DbSet<TemperatureItem> TemperatureItems { get; set; }
+        public DbSet<Device> Devices { get; set; }
     }
 }

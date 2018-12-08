@@ -1,0 +1,70 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SensorApi.Models;
+
+// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+
+namespace SensorApi.Controllers
+{
+    [Route("api/[controller]")]
+    public class DeviceController : Controller
+    {
+        private readonly TemperatureContext _context;
+
+        public DeviceController(TemperatureContext context)
+        {
+            _context = context;
+        }
+
+        // GET: api/<controller>
+        [HttpGet]
+        public List<Device> GetAll()
+        {
+            return _context.Devices.ToList();
+        }
+
+        // GET: api/<controller>/5
+        [HttpGet("{id}", Name = "GetDevice")]
+        public IActionResult GetById(long id)
+        {
+            var item = _context.Devices.Find(id);
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return Ok(item);
+        }
+
+        // POST api/<controller>
+        [HttpPost]
+        public IActionResult Create([FromBody] Device device)
+        {
+            if (device == null)
+            {
+                return BadRequest();
+            }
+
+            _context.Devices.Add(device);
+            _context.SaveChanges();
+
+            return CreatedAtRoute("GetDevice", new { id = device.Id }, device);
+        }
+
+        // PUT api/<controller>/5
+        [HttpPut("{id}")]
+        public void Put(int id, [FromBody]string value)
+        {
+        }
+
+        // DELETE api/<controller>/5
+        [HttpDelete("{id}")]
+        public void Delete(int id)
+        {
+        }
+    }
+}

@@ -11,9 +11,10 @@ using System;
 namespace SensorApi.Migrations
 {
     [DbContext(typeof(TemperatureContext))]
-    partial class TemperatureContextModelSnapshot : ModelSnapshot
+    [Migration("20181208044745_AddDeviceModel")]
+    partial class AddDeviceModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
