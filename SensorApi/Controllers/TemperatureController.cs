@@ -19,13 +19,6 @@ namespace SensorApi.Controllers
         public TemperatureController(TemperatureContext context)
         {
             _context = context;
-
-            if (_context.TemperatureItems.Count() == 0)
-            {
-                _context.TemperatureItems.Add(
-                    new TemperatureItem { Temperature = 0.0, Timestamp = DateTime.Now });
-                _context.SaveChanges();
-            }
         }
 
         // GET: api/<controller>
