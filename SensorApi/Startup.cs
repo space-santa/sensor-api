@@ -27,7 +27,8 @@ namespace SensorApi
         {
             string dataSource = Environment.GetEnvironmentVariable("DATA_SOURCE");
 
-            if (dataSource == null) {
+            if (dataSource == null)
+            {
                 dataSource = "TemperatureList.db";
             }
 
@@ -55,6 +56,8 @@ namespace SensorApi
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
             app.UseCors("AllowCors");
             app.UseMvc();
         }
