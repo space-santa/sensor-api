@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Temperature Viewer</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="moment-with-locales.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-basic-latest.min.js"></script>
+    <link rel="stylesheet" href="jquery-ui-1.12.1.custom/jquery-ui.css">
+    <script src="jquery-ui-1.12.1.custom/jquery-ui.js"></script>
+    <script>
+        $(document).ready(function(){
+            $( "#start-date" ).datepicker();
+            $( "#start-date" ).datepicker( "option", "firstDay", 1 );
+
+            $("#getAllBtn").click(getAll);
+
+            var startDate = moment();
+            startDate = startDate.add(-1, 'week');
+            $("#start-date").val(startDate.format());
+
+            getAll();
+        });
+
+        function getAll() {
+            getData();
+            getHistory();
+        }
+
+        function getData() {
+            $.get("http://whiterun:4567/api/temperature/latest", function(data, status){
+                prettyPrint(data);
+            });
+        }
+
+        const deviceNameMap = {
+            "Garage": "tinkerpi",
+            "Living": "famcam",
+            "Stairs": "doorbell-dev",
+            "Bedroom": "sense-hat"
+        }
+
+        function getHistory() {
+            let start = $("#start-date").val();
+            var divNames = ["Garage", "Living", "Stairs", "Bedroom"];
+            divNames.forEach(element => {
+                let deviceId = deviceNameMap[element];
+                $.ajax({
+                    url: "http://whiterun:4567/api/temperature/",
+                    type: "get",
+                    data: {
+                        startDate: start,
+                        device: deviceId,
+                    },
+                    success: function(response) {
+                        var x = [];
+                        var y = [];
+                        response.forEach(element => {
+                            x.push(moment(element.timestamp + "+0000").format());
+                            y.push(element.temperature);
+                        });
+
+                        makeHistoryPlot(x, y, element);
+                    },
+                    error: function(xhr) {
+                        //Do Something to handle error
+                    }
+                });
+            });
+        }
+
+        function prettyPrint(data) {
+            let garage = 0;
+            let living = 0;
+            let stairs = 0;
+            let bedroom = 0;
+            let timestamp = "";
+
+            for (let device of data) {
+                let tmp = new DeviceData(device);
+                switch(tmp.name) {
+                    case "tinkerpi":
+                        garage = tmp.temperature;
+                        timestamp = tmp.timestamp;
+                        break;
+                    case "famcam":
+                        living = tmp.temperature;
+                        break;
+                    case "sense-hat":
+                        bedroom = tmp.temperature;
+                        break;
+                    case "doorbell-dev":
+                        stairs = tmp.temperature;
+                        break;
+                }
+            }
+
+            makePlot(garage, living, stairs, bedroom, timestamp);
+        }
+
+        class DeviceData {
+            constructor(data) {
+                this.name = data.device;
+                this.timestamp = moment(data.timestamp + "+0000").format('ddd, HH:mm');
+                this.temperature = data.temperature.toFixed(1);
+            }
+
+            getLocation() {
+                switch(this.name) {
+                    case "tinkerpi":
+                        return "Garage"
+                    case "famcam":
+                        return "Living Room"
+                    case "sense-hat":
+                        return "Bedroom"
+                    case "doorbell-dev":
+                        return "Stairs"
+                }
+            }
+
+            toHtml() {
+                return this.makeCell(this.getLocation()) + this.makeCell("<b>" + this.temperature + "</b>") + this.makeCell(this.timestamp) + this.makeCell(this.name)
+            }
+
+            makeCell(content) {
+                return "<td>" + content + "</td>";
+            }
+
+            toString() {
+                return this.temperature + "°C | " + this.timestamp + " - " + this.name;
+            }
+        }
+
+        function makePlot(garage, living, stairs, bedroom, timestamp) {
+            var xValue = ['Garage', 'Living', 'Stairs', 'Bedroom'];
+            var yValue = [garage, living, stairs, bedroom];
+
+            var trace1 = {
+            x: xValue,
+            y: yValue,
+            type: 'bar',
+            text: yValue,
+            textposition: 'auto',
+            hoverinfo: 'none',
+            marker: {
+                color: 'rgb(158,202,225)',
+                opacity: 0.6,
+                line: {
+                color: 'rbg(8,48,107)',
+                width: 1.5
+                }
+            }
+            };
+
+            var data = [trace1];
+
+            var layout = {
+                title: timestamp,
+                yaxis: {
+                    autorange: false,
+                    range: [0, 40]
+                }
+            };
+
+            Plotly.newPlot('thePlot', data, layout);
+        }
+
+        function makeHistoryPlot(timestamps, data, deviceName) {
+            var layout = {
+                title: deviceName,
+                yaxis: {
+                    autorange: false,
+                    range: [0, 40]
+                }
+            };
+            Plotly.newPlot(
+                deviceName,
+                [{x: timestamps, y: data}],
+                layout
+            );
+        }
+
+</script>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-4">Start date:<div id="start-date"></div></div>
+        <div class="col-sm-4"><button class="btn btn-primary" id="getAllBtn">Get Temperature</button></div>
+        <div class="col-sm-2"></div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div id="thePlot"></div>
+    <div id="Garage"></div>
+    <div id="Living"></div>
+    <div id="Stairs"></div>
+    <div id="Bedroom"></div>
+</div>
+
+</body>
+</html>
