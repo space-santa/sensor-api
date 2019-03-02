@@ -30,7 +30,7 @@
         }
 
         function getData() {
-            $.get("http://whiterun:4567/api/temperature/latest", function(data, status){
+            $.get("api/temperature/latest", function(data, status){
                 prettyPrint(data);
             });
         }
@@ -48,7 +48,7 @@
             divNames.forEach(element => {
                 let deviceId = deviceNameMap[element];
                 $.ajax({
-                    url: "http://whiterun:4567/api/temperature/",
+                    url: "api/temperature/",
                     type: "get",
                     data: {
                         startDate: start,
