@@ -23,32 +23,23 @@ namespace SensorApi.Controllers
 
         // GET: api/<controller>
         [HttpGet]
-        public List<TemperatureItem> GetAll(DateTime startDate, string device)
+        public List<TemperatureItem> GetAll(DateTime startDate, long deviceId)
         {
-            var timeFilteredData = _context.TemperatureItems.Where(x => x.Timestamp >= startDate);
-
-            if (device?.Length > 0)
-            {
-                return timeFilteredData.Where(x => x.Device == device).ToList();
-            }
-
+            var timeFilteredData = _context.TemperatureItems.Where(x => x.Timestamp >= startDate && x.DeviceId == deviceId);
             return timeFilteredData.ToList();
         }
 
         // GET: api/<controller>/latest
         [EnableCors("AllowCors"), HttpGet("latest", Name = "LatestTemperature")]
-        public List<TemperatureItem> GetLatest()
+        public List<TemperatureItem> GetLatest(int[] deviceIds)
         {
-            var list = _context.TemperatureItems.ToList();
             List<TemperatureItem> retval = new List<TemperatureItem>();
 
-            System.Diagnostics.Debug.WriteLine($"Get the latest of {list.Count.ToString()}");
-            for (int i = Math.Max(list.Count() - 4, 0); i < list.Count(); ++i)
+            foreach (int deviceId in deviceIds)
             {
-                retval.Add(list[i]);
-                System.Diagnostics.Debug.WriteLine($"at {i.ToString()}");
+                var item = _context.TemperatureItems.Where(x => x.DeviceId == deviceId).Last();
+                retval.Add(item);
             }
-            System.Diagnostics.Debug.WriteLine($"result is of length {retval.Count.ToString()}");
 
             return retval;
         }

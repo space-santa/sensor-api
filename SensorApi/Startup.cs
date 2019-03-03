@@ -54,6 +54,13 @@ namespace SensorApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+                {
+                    using (var context = serviceScope.ServiceProvider.GetRequiredService<TemperatureContext>())
+                    {
+                        Data.DbInitializer.Initialize(context);
+                    }
+                }
             }
 
             app.UseDefaultFiles();

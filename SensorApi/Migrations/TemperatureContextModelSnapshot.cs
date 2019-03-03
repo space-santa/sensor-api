@@ -24,11 +24,14 @@ namespace SensorApi.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Location");
+                    b.Property<string>("Location")
+                        .IsRequired();
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired();
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PrimaryKey_DeviceId");
 
                     b.ToTable("Devices");
                 });
@@ -38,15 +41,27 @@ namespace SensorApi.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Device");
+                    b.Property<long>("DeviceId");
 
                     b.Property<double>("Temperature");
 
                     b.Property<DateTime>("Timestamp");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PrimaryKey_TemperatureItemId");
+
+                    b.HasIndex("DeviceId");
 
                     b.ToTable("TemperatureItems");
+                });
+
+            modelBuilder.Entity("SensorApi.Models.TemperatureItem", b =>
+                {
+                    b.HasOne("SensorApi.Models.Device", "Device")
+                        .WithMany("TemperatureItems")
+                        .HasForeignKey("DeviceId")
+                        .HasConstraintName("ForeignKey_TemperatureItem_Device")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }
