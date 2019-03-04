@@ -5,7 +5,26 @@ services:
     build:
       context: ../..
       dockerfile: ./docker/Dockerfile.migrate
-    volumes:
-      - /opt/SensorApi/db:/opt/db
+    depends_on:
+      - database
     environment:
-      - DATA_SOURCE=/opt/db/sensor.db
+      - PG_HOST=sensor-api-db:5432
+      - ASPNETCORE_ENVIRONMENT=Production
+    networks:
+      - sensor-api-migrate
+
+  database:
+    container_name: sensor-api-db
+    image: postgres:11
+    volumes:
+      - /opt/SensorApi/pgvol:/var/lib/postgresql
+    environment:
+      - POSTGRES_USER=bob
+      - POSTGRES_DBNAME=bob
+      - POSTGRES_PASS=bob
+      - ALLOW_IP_RANGE=0.0.0.0/0
+    networks:
+      - sensor-api-migrate
+
+networks: 
+  sensor-api-migrate:

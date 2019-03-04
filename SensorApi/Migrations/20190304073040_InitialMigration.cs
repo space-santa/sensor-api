@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace SensorApi.Migrations
 {
@@ -13,7 +13,7 @@ namespace SensorApi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     Location = table.Column<string>(nullable: false),
                     Name = table.Column<string>(nullable: false)
                 },
@@ -27,10 +27,10 @@ namespace SensorApi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    DeviceId = table.Column<long>(nullable: false),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     Temperature = table.Column<double>(nullable: false),
-                    Timestamp = table.Column<DateTime>(nullable: false)
+                    Timestamp = table.Column<DateTime>(nullable: false),
+                    DeviceId = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
                 {

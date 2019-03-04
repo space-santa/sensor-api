@@ -1,8 +1,8 @@
-FROM microsoft/dotnet:2.1-sdk AS base
+FROM microsoft/dotnet:2.2-sdk AS base
 WORKDIR /app
 EXPOSE 80
 
-FROM microsoft/dotnet:2.1-sdk AS build
+FROM microsoft/dotnet:2.2-sdk AS build
 WORKDIR /src
 COPY SensorApi.csproj .
 RUN dotnet restore SensorApi.csproj
@@ -16,4 +16,6 @@ RUN dotnet publish SensorApi.csproj -c Release -o /app
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
-ENTRYPOINT ["dotnet", "SensorApi.dll"]
+COPY wait-for-it/wait-for-it.sh wait-for-it.sh
+COPY docker/start_prod.sh start_prod.sh
+CMD ["bash", "start_prod.sh"]

@@ -25,16 +25,10 @@ namespace SensorApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            string dataSource = Environment.GetEnvironmentVariable("DATA_SOURCE");
-
-            if (dataSource == null)
-            {
-                dataSource = "TemperatureList.db";
-            }
-
-            System.Diagnostics.Debug.WriteLine($"Data Source={dataSource}");
-
-            services.AddDbContext<TemperatureContext>(opt => opt.UseSqlite($"Data Source={dataSource}"));
+            var sqlConnectionString = Configuration.GetConnectionString("Default");
+            services.AddEntityFrameworkNpgsql();
+            services.AddDbContext<TemperatureContext>(options => options.UseNpgsql(sqlConnectionString));
+            services.BuildServiceProvider();
             services.AddMvc();
             services.AddCors(
                 options => options.AddPolicy("AllowCors",

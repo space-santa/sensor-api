@@ -1,0 +1,18 @@
+version: '3.4'
+
+services:
+  database:
+    image: postgres:11
+    container_name: local-sensor-api-db
+    volumes:
+      - dbvol:/var/lib/postgresql
+    environment:
+      - POSTGRES_USER=bob
+      - POSTGRES_DBNAME=bob
+      - POSTGRES_PASS=bob
+      - ALLOW_IP_RANGE=0.0.0.0/0
+    ports:
+      - 5432:5432
+
+volumes:
+  dbvol:

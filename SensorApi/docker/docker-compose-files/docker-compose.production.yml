@@ -6,9 +6,28 @@ services:
     build:
       context: ../..
       dockerfile: ./docker/Dockerfile.production
+    container_name: sensor-api-prod
+    environment:
+      - PG_HOST=sensor-api-db:5432
     ports:
       - 4567:80
+    depends_on:
+      - database
+    networks:
+      - sensor-api-net
+
+  database:
+    container_name: sensor-api-db
+    image: postgres:11
     volumes:
-      - /opt/SensorApi/db:/opt/db
+      - /opt/SensorApi/pgvol:/var/lib/postgresql
     environment:
-      - DATA_SOURCE=/opt/db/sensor.db
+      - POSTGRES_USER=bob
+      - POSTGRES_DBNAME=bob
+      - POSTGRES_PASS=bob
+      - ALLOW_IP_RANGE=0.0.0.0/0
+    networks:
+      - sensor-api-net
+
+networks: 
+  sensor-api-net:
