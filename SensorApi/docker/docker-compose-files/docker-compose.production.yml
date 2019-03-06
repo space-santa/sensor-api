@@ -20,7 +20,7 @@ services:
     container_name: sensor-api-db
     image: postgres:11
     volumes:
-      - /opt/SensorApi/pgvol:/var/lib/postgresql
+      - /opt/SensorApi/pgdata:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=bob
       - POSTGRES_DBNAME=bob
@@ -29,5 +29,5 @@ services:
     networks:
       - sensor-api-net
 
-networks: 
+networks:
   sensor-api-net:
