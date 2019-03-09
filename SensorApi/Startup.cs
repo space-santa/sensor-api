@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,6 +31,7 @@ namespace SensorApi
             services.AddEntityFrameworkNpgsql();
             services.AddDbContext<TemperatureContext>(options => options.UseNpgsql(sqlConnectionString));
             services.BuildServiceProvider();
+            services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<TemperatureContext>();
             services.AddMvc();
             services.AddCors(
                 options => options.AddPolicy("AllowCors",
@@ -59,13 +62,9 @@ namespace SensorApi
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
+            app.UseAuthentication();
+            app.UseMvcWithDefaultRoute();
             app.UseCors("AllowCors");
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
         }
     }
 }
