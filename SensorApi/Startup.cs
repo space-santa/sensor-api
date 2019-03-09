@@ -12,6 +12,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SensorApi.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace SensorApi
 {
@@ -31,8 +33,19 @@ namespace SensorApi
             services.AddEntityFrameworkNpgsql();
             services.AddDbContext<TemperatureContext>(options => options.UseNpgsql(sqlConnectionString));
             services.BuildServiceProvider();
-            services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<TemperatureContext>();
-            services.AddMvc();
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<TemperatureContext>()
+                .AddDefaultUI()
+                .AddDefaultTokenProviders();
+            services.AddMvc(
+                config =>
+                {
+                    var policy = new AuthorizationPolicyBuilder()
+                                    .RequireAuthenticatedUser()
+                                    .Build();
+                    config.Filters.Add(new AuthorizeFilter(policy));
+                }
+            );
             services.AddCors(
                 options => options.AddPolicy("AllowCors",
                 builder =>
