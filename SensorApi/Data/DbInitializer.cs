@@ -1,15 +1,76 @@
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using SensorApi.Models;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SensorApi.Data
 {
     public static class DbInitializer
     {
-        public static void Initialize(TemperatureContext context)
+        public static async Task InitializeAsync(IServiceProvider serviceProvider, IHostingEnvironment environment)
         {
-            context.Database.EnsureCreated();
+            using (var context = serviceProvider.GetRequiredService<TemperatureContext>())
+            {
+                context.Database.Migrate();
+                await CreateFirstUserAsync(serviceProvider);
 
+                if (environment.IsDevelopment())
+                {
+                    DbInitializer.SeedTestData(context);
+                }
+            }
+        }
+
+        public static async Task CreateFirstUserAsync(IServiceProvider serviceProvider)
+        {
+            await EnsureRoleAsync(serviceProvider, Constants.AdministratorRole);
+            await EnsureRoleAsync(serviceProvider, Constants.DeviceRole);
+            var adminID = await EnsureUserAsync(serviceProvider, "Password123", "admin@clau.space");
+            await AddUserToRole(serviceProvider, adminID, Constants.AdministratorRole);
+        }
+
+        private static async Task<string> EnsureUserAsync(IServiceProvider serviceProvider, string testUserPw, string UserName)
+        {
+            var userManager = serviceProvider.GetService<UserManager<IdentityUser>>();
+
+            var user = await userManager.FindByNameAsync(UserName);
+            if (user == null)
+            {
+                user = new IdentityUser { UserName = UserName, Email = UserName };
+                await userManager.CreateAsync(user, testUserPw);
+            }
+
+            return user.Id;
+        }
+
+        private static async Task EnsureRoleAsync(IServiceProvider serviceProvider, string role)
+        {
+            var roleManager = serviceProvider.GetService<RoleManager<IdentityRole>>();
+
+            if (roleManager == null)
+            {
+                throw new Exception("roleManager null");
+            }
+
+            if (!await roleManager.RoleExistsAsync(role))
+            {
+                await roleManager.CreateAsync(new IdentityRole(role));
+            }
+        }
+
+        private static async Task<IdentityResult> AddUserToRole(IServiceProvider serviceProvider, string uid, string role)
+        {
+            var userManager = serviceProvider.GetService<UserManager<IdentityUser>>();
+            var user = await userManager.FindByIdAsync(uid);
+            return await userManager.AddToRoleAsync(user, role);
+        }
+
+        public static void SeedTestData(TemperatureContext context)
+        {
             if (context.Devices.Any())
             {
                 return;

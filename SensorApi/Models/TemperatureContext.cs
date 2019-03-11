@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace SensorApi.Models
 {
-    public class TemperatureContext : DbContext
+    public class TemperatureContext : IdentityDbContext
     {
         public DbSet<TemperatureItem> TemperatureItems { get; set; }
         public DbSet<Device> Devices { get; set; }
@@ -18,6 +19,8 @@ namespace SensorApi.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Device>()
                 .HasKey(d => d.Id)
                 .HasName("PrimaryKey_DeviceId");

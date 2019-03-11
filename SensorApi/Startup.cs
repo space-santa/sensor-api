@@ -14,6 +14,7 @@ using Microsoft.Extensions.Options;
 using SensorApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace SensorApi
 {
@@ -45,7 +46,7 @@ namespace SensorApi
                                     .Build();
                     config.Filters.Add(new AuthorizeFilter(policy));
                 }
-            );
+            ).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);;
             services.AddCors(
                 options => options.AddPolicy("AllowCors",
                 builder =>
@@ -64,13 +65,6 @@ namespace SensorApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
-                {
-                    using (var context = serviceScope.ServiceProvider.GetRequiredService<TemperatureContext>())
-                    {
-                        Data.DbInitializer.Initialize(context);
-                    }
-                }
             }
 
             app.UseDefaultFiles();
