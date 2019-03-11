@@ -29,7 +29,9 @@ namespace SensorApi.Data
         {
             await EnsureRoleAsync(serviceProvider, Constants.AdministratorRole);
             await EnsureRoleAsync(serviceProvider, Constants.DeviceRole);
-            var adminID = await EnsureUserAsync(serviceProvider, "Password123", "admin@clau.space");
+            // The passwordd must contain at least contain one non alphanumeric character.
+            // Else the seeding fails silently.
+            var adminID = await EnsureUserAsync(serviceProvider, "Password123*", "admin@clau.space");
             await AddUserToRole(serviceProvider, adminID, Constants.AdministratorRole);
         }
 

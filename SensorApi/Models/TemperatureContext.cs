@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SensorApi.Models
 {
+    // Must inherit from IdentitytDbContext because this context is handling users.
     public class TemperatureContext : IdentityDbContext
     {
         public DbSet<TemperatureItem> TemperatureItems { get; set; }
@@ -19,6 +20,7 @@ namespace SensorApi.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Must call parent OnModelCreate here, else Identity won't work.
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Device>()
