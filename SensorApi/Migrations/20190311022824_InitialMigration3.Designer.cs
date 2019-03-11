@@ -10,8 +10,8 @@ using SensorApi.Models;
 namespace SensorApi.Migrations
 {
     [DbContext(typeof(TemperatureContext))]
-    [Migration("20190311010236_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20190311022824_InitialMigration3")]
+    partial class InitialMigration3
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
