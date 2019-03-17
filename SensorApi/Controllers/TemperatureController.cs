@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,7 @@ namespace SensorApi.Controllers
 
         // GET: api/<controller>
         [HttpGet]
+        [AllowAnonymous]
         public List<TemperatureItem> GetAll(DateTime startDate, long deviceId)
         {
             var timeFilteredData = _context.TemperatureItems.Where(x => x.Timestamp >= startDate && x.DeviceId == deviceId);
@@ -31,14 +33,22 @@ namespace SensorApi.Controllers
 
         // GET: api/<controller>/latest
         [EnableCors("AllowCors"), HttpGet("latest", Name = "LatestTemperature")]
+        [AllowAnonymous]
         public List<TemperatureItem> GetLatest(int[] deviceIds)
         {
             List<TemperatureItem> retval = new List<TemperatureItem>();
 
             foreach (int deviceId in deviceIds)
             {
-                var item = _context.TemperatureItems.Where(x => x.DeviceId == deviceId).Last();
-                retval.Add(item);
+                try
+                {
+                    var item = _context.TemperatureItems.Where(x => x.DeviceId == deviceId).Last();
+                    retval.Add(item);
+                }
+                catch (InvalidOperationException)
+                {
+                    // This is most likely because a device hasn't send any data yet.
+                }
             }
 
             return retval;
@@ -46,6 +56,7 @@ namespace SensorApi.Controllers
 
         // GET: api/<controller>/5
         [HttpGet("{id}", Name = "GetTemperature")]
+        [AllowAnonymous]
         public IActionResult GetById(long id)
         {
             var item = _context.TemperatureItems.Find(id);
@@ -58,6 +69,7 @@ namespace SensorApi.Controllers
 
         // POST api/<controller>
         [HttpPost]
+        [Authorize(Roles = Constants.DeviceRole)]
         public IActionResult Create([FromBody] TemperatureItem item)
         {
             if (item == null)
@@ -73,12 +85,14 @@ namespace SensorApi.Controllers
 
         // PUT api/<controller>/5
         [HttpPut("{id}")]
+        [Authorize(Roles = Constants.DeviceRole)]
         public void Put(int id, [FromBody]string value)
         {
         }
 
         // DELETE api/<controller>/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = Constants.DeviceRole)]
         public void Delete(int id)
         {
         }

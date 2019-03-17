@@ -4,12 +4,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SensorApi.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace SensorApi
 {
@@ -29,7 +34,19 @@ namespace SensorApi
             services.AddEntityFrameworkNpgsql();
             services.AddDbContext<TemperatureContext>(options => options.UseNpgsql(sqlConnectionString));
             services.BuildServiceProvider();
-            services.AddMvc();
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<TemperatureContext>()
+                .AddDefaultUI()
+                .AddDefaultTokenProviders();
+            services.AddMvc(
+                config =>
+                {
+                    var policy = new AuthorizationPolicyBuilder()
+                                    .RequireAuthenticatedUser()
+                                    .Build();
+                    config.Filters.Add(new AuthorizeFilter(policy));
+                }
+            ).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);;
             services.AddCors(
                 options => options.AddPolicy("AllowCors",
                 builder =>
@@ -48,19 +65,13 @@ namespace SensorApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
-                {
-                    using (var context = serviceScope.ServiceProvider.GetRequiredService<TemperatureContext>())
-                    {
-                        Data.DbInitializer.Initialize(context);
-                    }
-                }
             }
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
+            app.UseAuthentication();
+            app.UseMvcWithDefaultRoute();
             app.UseCors("AllowCors");
-            app.UseMvc();
         }
     }
 }

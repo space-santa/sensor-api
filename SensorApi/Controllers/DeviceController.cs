@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,7 @@ namespace SensorApi.Controllers
 
         // GET: api/<controller>
         [HttpGet]
+        [AllowAnonymous]
         public List<Device> GetAll()
         {
             return _context.Devices.ToList();
@@ -30,6 +32,7 @@ namespace SensorApi.Controllers
 
         // GET: api/<controller>/5
         [HttpGet("{id}", Name = "GetDevice")]
+        [AllowAnonymous]
         public IActionResult GetById(long id)
         {
             var item = _context.Devices.Find(id);
@@ -42,6 +45,7 @@ namespace SensorApi.Controllers
 
         // POST api/<controller>
         [HttpPost]
+        [Authorize (Roles = Constants.DeviceRole)]
         public IActionResult Create([FromBody] Device device)
         {
             if (device == null)
@@ -57,12 +61,14 @@ namespace SensorApi.Controllers
 
         // PUT api/<controller>/5
         [HttpPut("{id}")]
+        [Authorize (Roles = Constants.AdministratorRole)]
         public void Put(int id, [FromBody]string value)
         {
         }
 
         // DELETE api/<controller>/5
         [HttpDelete("{id}")]
+        [Authorize (Roles = Constants.AdministratorRole)]
         public void Delete(int id)
         {
         }

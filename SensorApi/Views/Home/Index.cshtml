@@ -1,0 +1,197 @@
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="~/lib/moment/moment-with-locales.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-basic-latest.min.js"></script>
+<link rel="stylesheet" href="~/lib/jquery-ui/jquery-ui-1.12.1.custom/jquery-ui.css">
+<script src="~/lib/jquery-ui/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
+<script>
+    $(document).ready(function () {
+        var $j = jQuery.noConflict();
+        $j("#start-date").datepicker();
+        $j("#start-date").datepicker("option", "firstDay", 1);
+
+        $("#getAllBtn").click(getDevices);
+
+        var startDate = moment();
+        startDate = startDate.add(-1, 'week');
+        $j("#start-date").val(startDate.format());
+
+        getDevices();
+    });
+
+    const devices = {};
+
+    function getDevices() {
+        $.get("api/device", function (data, status) {
+            $("#plotContainer").empty();
+            for (d of data) {
+                devices[d.id] = d.location;
+                $("#plotContainer").append("<div id='" + d.location + "'></div>");
+            }
+            getData();
+            getHistory();
+        })
+    }
+
+    function getData() {
+        let device_ids = Object.keys(devices);
+        device_id_string = "";
+        for (let a of device_ids) {
+            device_id_string += ("deviceIds=" + a + "&");
+        }
+        device_id_string = device_id_string.slice(0, -1);
+        $.ajax({
+            url: "api/temperature/latest",
+            type: "get",
+            data: device_id_string,
+            success: function (response) {
+                prettyPrint(response);
+            },
+            error: function (xhr) {
+                //Do Something to handle error
+            }
+        });
+    }
+
+    function getHistory() {
+        let start = $("#start-date").val();
+
+        let device_ids = Object.keys(devices);
+        for (let a of device_ids) {
+            $.ajax({
+                url: "api/temperature/",
+                type: "get",
+                data: {
+                    startDate: start,
+                    deviceId: a,
+                },
+                success: function (response) {
+                    var x = [];
+                    var y = [];
+                    response.forEach(element => {
+                        x.push(moment(element.timestamp + "+0000").format());
+                        y.push(element.temperature);
+                    });
+
+                    makeHistoryPlot(x, y, devices[a]);
+                },
+                error: function (xhr) {
+                    //Do Something to handle error
+                }
+            });
+        }
+    }
+
+    function prettyPrint(data) {
+        let listToPlot = []
+
+        for (let device of data) {
+            let tmp = new DeviceData(device);
+            listToPlot.push(tmp);
+        }
+
+        makePlot(listToPlot, listToPlot[0].timestamp);
+    }
+
+    class DeviceData {
+        constructor(data) {
+            this.name = devices[data.deviceId];
+            this.timestamp = moment(data.timestamp + "+0000").format('ddd, HH:mm');
+            this.temperature = data.temperature.toFixed(1);
+        }
+
+        toHtml() {
+            return this.makeCell(this.name) + this.makeCell("<b>" + this.temperature + "</b>") + this.makeCell(this.timestamp) + this.makeCell(this.name)
+        }
+
+        makeCell(content) {
+            return "<td>" + content + "</td>";
+        }
+
+        toString() {
+            return this.temperature + "°C | " + this.timestamp + " - " + this.name;
+        }
+    }
+
+    function makePlot(listToPlot, timestamp) {
+        var xValue = [];
+        var yValue = [];
+
+        for (let d of listToPlot) {
+            xValue.push(d.name)
+            yValue.push(d.temperature)
+        }
+
+        var trace1 = {
+            x: xValue,
+            y: yValue,
+            type: 'bar',
+            text: yValue,
+            textposition: 'auto',
+            hoverinfo: 'none',
+            marker: {
+                color: 'rgb(158,202,225)',
+                opacity: 0.6,
+                line: {
+                    color: 'rbg(8,48,107)',
+                    width: 1.5
+                }
+            }
+        };
+
+        var data = [trace1];
+
+        var layout = {
+            title: timestamp,
+            yaxis: {
+                autorange: false,
+                range: [0, 40]
+            }
+        };
+
+        Plotly.newPlot('thePlot', data, layout);
+    }
+
+    function makeHistoryPlot(timestamps, data, deviceName) {
+        var layout = {
+            title: deviceName,
+            yaxis: {
+                autorange: false,
+                range: [0, 40]
+            }
+        };
+        Plotly.newPlot(
+            deviceName,
+            [{ x: timestamps, y: data }],
+            layout
+        );
+    }
+
+</script>
+
+<div class="text-center">
+    <h1 class="display-4">Temperature Viewer</h1>
+    <p>Change the date below the bar plot to change the startdate of the line plots.</a>.</p>
+</div>
+
+<div id="thePlot"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4">Start date:<div id="start-date"></div></div>
+        <div class="col-sm-4"></div>
+    </div>
+    <div class="row text-center">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4"><button class="btn btn-primary" id="getAllBtn">Get Temperature</button></div>
+        <div class="col-sm-4"></div>
+    </div>
+</div>
+
+<div class="container-fluid" id="plotContainer"></div>
