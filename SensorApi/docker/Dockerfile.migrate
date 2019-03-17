@@ -2,4 +2,5 @@ FROM microsoft/dotnet:2.2-sdk
 WORKDIR /app
 COPY . .
 RUN dotnet restore
+COPY wait-for-it/wait-for-it.sh wait-for-it.sh
 CMD ["bash", "docker/start_migrations.sh"]
