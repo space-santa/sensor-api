@@ -9,6 +9,7 @@ services:
     container_name: sensor-api-prod
     environment:
       - PG_HOST=sensor-api-db:5432
+      - ASPNETCORE_ENVIRONMENT=Production
     ports:
       - 4567:80
     depends_on:
