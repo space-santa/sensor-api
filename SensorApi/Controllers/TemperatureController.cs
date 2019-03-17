@@ -40,8 +40,15 @@ namespace SensorApi.Controllers
 
             foreach (int deviceId in deviceIds)
             {
-                var item = _context.TemperatureItems.Where(x => x.DeviceId == deviceId).Last();
-                retval.Add(item);
+                try
+                {
+                    var item = _context.TemperatureItems.Where(x => x.DeviceId == deviceId).Last();
+                    retval.Add(item);
+                }
+                catch (InvalidOperationException)
+                {
+                    // This is most likely because a device hasn't send any data yet.
+                }
             }
 
             return retval;
