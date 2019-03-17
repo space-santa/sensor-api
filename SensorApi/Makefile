@@ -1,3 +1,15 @@
+.PHONY: migrate-down
+migrate-down:
+	docker-compose -f docker/docker-compose-files/docker-compose.migrate.yml down
+
+.PHONY: migrate-up
+migrate-up:
+	docker-compose -f docker/docker-compose-files/docker-compose.migrate.yml up
+
+.PHONY: migrate-build
+migrate-build:
+	docker-compose -f docker/docker-compose-files/docker-compose.migrate.yml build
+
 .PHONY: prod-down
 prod-down:
 	docker-compose -f docker/docker-compose-files/docker-compose.production.yml down
