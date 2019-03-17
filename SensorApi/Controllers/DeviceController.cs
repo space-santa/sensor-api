@@ -45,7 +45,7 @@ namespace SensorApi.Controllers
 
         // POST api/<controller>
         [HttpPost]
-        [Authorize (Roles = Constants.AdministratorRole)]
+        [Authorize (Roles = Constants.DeviceRole)]
         public IActionResult Create([FromBody] Device device)
         {
             if (device == null)
