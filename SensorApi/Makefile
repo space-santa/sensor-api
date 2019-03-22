@@ -29,3 +29,27 @@ db-up:
 .PHONY: db-down
 db-down:
 	docker-compose -f docker/docker-compose-files/db.yml down
+
+.PHONY: lmig-down
+lmig-down:
+	docker-compose -f docker/docker-compose-files/docker-compose.local-migrate.yml down
+
+.PHONY: lmig-up
+lmig-up:
+	docker-compose -f docker/docker-compose-files/docker-compose.local-migrate.yml up
+
+.PHONY: lmig-build
+lmig-build:
+	docker-compose -f docker/docker-compose-files/docker-compose.local-migrate.yml build
+
+.PHONY: lprod-down
+lprod-down:
+	docker-compose -f docker/docker-compose-files/docker-compose.local-prod.yml down
+
+.PHONY: lprod-up
+lprod-up:
+	docker-compose -f docker/docker-compose-files/docker-compose.local-prod.yml up
+
+.PHONY: lprod-build
+lprod-build:
+	docker-compose -f docker/docker-compose-files/docker-compose.local-prod.yml build

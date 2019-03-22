@@ -1,0 +1,36 @@
+version: '3.4'
+
+services:
+  sensorapi:
+    build:
+      context: ../..
+      dockerfile: ./docker/Dockerfile.production
+    container_name: sensor-api-prod
+    environment:
+      - PG_HOST=sensor-api-db:5432
+      - ASPNETCORE_ENVIRONMENT=Production
+    ports:
+      - 4567:80
+    depends_on:
+      - database
+    networks:
+      - sensor-api-net
+
+  database:
+    container_name: sensor-api-db
+    image: postgres:11
+    volumes:
+      - pg-lprod-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=bob
+      - POSTGRES_DBNAME=bob
+      - POSTGRES_PASS=bob
+      - ALLOW_IP_RANGE=0.0.0.0/0
+    networks:
+      - sensor-api-net
+
+networks:
+  sensor-api-net:
+
+volumes:
+  pg-lprod-data:
