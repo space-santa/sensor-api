@@ -25,6 +25,8 @@
         $j("#start-date").val(startDate.format());
 
         getDevices();
+
+        var idleInterval = setInterval("getDevices()", 5 * 60 * 1000);
     });
 
     const devices = {};
