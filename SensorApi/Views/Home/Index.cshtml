@@ -1,10 +1,13 @@
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+
 @{
     ViewData["Title"] = "Home Page";
 }
 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 <script src="~/lib/moment/moment-with-locales.min.js"></script>
 <script src="https://cdn.plot.ly/plotly-basic-latest.min.js"></script>
 <link rel="stylesheet" href="~/lib/jquery-ui/jquery-ui-1.12.1.custom/jquery-ui.css">
@@ -181,17 +184,20 @@
 
 <div id="thePlot"></div>
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-4"></div>
-        <div class="col-sm-4">Start date:<div id="start-date"></div></div>
-        <div class="col-sm-4"></div>
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">Start date:<div id="start-date"></div></div>
+            <div class="col-sm-4"></div>
+        </div>
+        <div class="row text-center">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4"><button class="btn btn-primary" id="getAllBtn">Get Temperature</button></div>
+            <div class="col-sm-4"></div>
+        </div>
     </div>
-    <div class="row text-center">
-        <div class="col-sm-4"></div>
-        <div class="col-sm-4"><button class="btn btn-primary" id="getAllBtn">Get Temperature</button></div>
-        <div class="col-sm-4"></div>
-    </div>
-</div>
 
-<div class="container-fluid" id="plotContainer"></div>
+    <div class="container-fluid" id="plotContainer"></div>
+}
