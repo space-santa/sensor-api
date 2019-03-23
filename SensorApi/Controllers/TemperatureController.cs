@@ -24,7 +24,6 @@ namespace SensorApi.Controllers
 
         // GET: api/<controller>
         [HttpGet]
-        [AllowAnonymous]
         public List<TemperatureItem> GetAll(DateTime startDate, long deviceId)
         {
             var timeFilteredData = _context.TemperatureItems.Where(x => x.Timestamp >= startDate && x.DeviceId == deviceId);

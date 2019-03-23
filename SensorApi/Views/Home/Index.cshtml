@@ -1,3 +1,6 @@
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -181,17 +184,20 @@
 
 <div id="thePlot"></div>
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-4"></div>
-        <div class="col-sm-4">Start date:<div id="start-date"></div></div>
-        <div class="col-sm-4"></div>
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">Start date:<div id="start-date"></div></div>
+            <div class="col-sm-4"></div>
+        </div>
+        <div class="row text-center">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4"><button class="btn btn-primary" id="getAllBtn">Get Temperature</button></div>
+            <div class="col-sm-4"></div>
+        </div>
     </div>
-    <div class="row text-center">
-        <div class="col-sm-4"></div>
-        <div class="col-sm-4"><button class="btn btn-primary" id="getAllBtn">Get Temperature</button></div>
-        <div class="col-sm-4"></div>
-    </div>
-</div>
 
-<div class="container-fluid" id="plotContainer"></div>
+    <div class="container-fluid" id="plotContainer"></div>
+}
