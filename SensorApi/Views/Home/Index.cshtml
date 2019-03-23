@@ -12,6 +12,16 @@
 <script src="https://cdn.plot.ly/plotly-basic-latest.min.js"></script>
 <link rel="stylesheet" href="~/lib/jquery-ui/jquery-ui-1.12.1.custom/jquery-ui.css">
 <script src="~/lib/jquery-ui/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <script>var loggedIn = true;</script>
+}
+else
+{
+    <script>var loggedIn = false;</script>
+}
+
 <script>
     $(document).ready(function () {
         var $j = jQuery.noConflict();
@@ -39,7 +49,9 @@
                 $("#plotContainer").append("<div id='" + d.location + "'></div>");
             }
             getData();
-            getHistory();
+            if (loggedIn) {
+                getHistory();
+            }
         })
     }
 
