@@ -18,6 +18,7 @@ services:
       - sensor-api-net
 
   database:
+    restart: unless-stopped
     container_name: sensor-api-db
     image: postgres:11
     volumes:
