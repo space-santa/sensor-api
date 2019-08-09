@@ -46,7 +46,7 @@ namespace SensorApi
                                     .Build();
                     config.Filters.Add(new AuthorizeFilter(policy));
                 }
-            ).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);;
+            ).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddCors(
                 options => options.AddPolicy("AllowCors",
                 builder =>

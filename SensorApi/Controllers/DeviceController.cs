@@ -45,7 +45,7 @@ namespace SensorApi.Controllers
 
         // POST api/<controller>
         [HttpPost]
-        [Authorize (Roles = Constants.DeviceRole)]
+        [Authorize(Roles = Constants.DeviceRole)]
         public IActionResult Create([FromBody] Device device)
         {
             if (device == null)
@@ -61,14 +61,14 @@ namespace SensorApi.Controllers
 
         // PUT api/<controller>/5
         [HttpPut("{id}")]
-        [Authorize (Roles = Constants.AdministratorRole)]
+        [Authorize(Roles = Constants.AdministratorRole)]
         public void Put(int id, [FromBody]string value)
         {
         }
 
         // DELETE api/<controller>/5
         [HttpDelete("{id}")]
-        [Authorize (Roles = Constants.AdministratorRole)]
+        [Authorize(Roles = Constants.AdministratorRole)]
         public void Delete(int id)
         {
         }
