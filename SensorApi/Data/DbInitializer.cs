@@ -6,12 +6,13 @@ using SensorApi.Models;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
 
 namespace SensorApi.Data
 {
     public static class DbInitializer
     {
-        public static async Task InitializeAsync(IServiceProvider serviceProvider, IHostingEnvironment environment)
+        public static async Task InitializeAsync(IServiceProvider serviceProvider, IWebHostEnvironment environment)
         {
             using (var context = serviceProvider.GetRequiredService<TemperatureContext>())
             {

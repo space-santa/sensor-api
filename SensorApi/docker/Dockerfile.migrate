@@ -1,7 +1,0 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.0
-WORKDIR /app
-COPY . .
-RUN dotnet restore
-COPY wait-for-it/wait-for-it.sh wait-for-it.sh
-RUN chmod a+x wait-for-it.sh
-CMD ["bash", "docker/start_migrations.sh"]

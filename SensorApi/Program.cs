@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace SensorApi
@@ -21,7 +22,7 @@ namespace SensorApi
             using (var scope = host.Services.CreateScope())
             {
                 var serviceProvider = scope.ServiceProvider;
-                var env = host.Services.GetRequiredService<IHostingEnvironment>();
+                var env = host.Services.GetRequiredService<IWebHostEnvironment>();
 
                 try
                 {

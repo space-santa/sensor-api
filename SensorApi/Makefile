@@ -22,18 +22,6 @@ db-up:
 db-down:
 	docker-compose -f docker/docker-compose-files/db.yml down
 
-.PHONY: lmig-down
-lmig-down:
-	docker-compose -f docker/docker-compose-files/docker-compose.local-migrate.yml down
-
-.PHONY: lmig-up
-lmig-up:
-	docker-compose -f docker/docker-compose-files/docker-compose.local-migrate.yml up
-
-.PHONY: lmig-build
-lmig-build:
-	docker-compose -f docker/docker-compose-files/docker-compose.local-migrate.yml build
-
 .PHONY: lprod-down
 lprod-down:
 	docker-compose -f docker/docker-compose-files/docker-compose.local-prod.yml down
@@ -46,29 +34,20 @@ lprod-up:
 lprod-build:
 	docker-compose -f docker/docker-compose-files/docker-compose.local-prod.yml build
 
-.PHONY: build-migration
-build-migration:
-	docker build -t sensor-api-migration -f docker/Dockerfile.migrate . && \
-	docker image tag sensor-api-migration neptune:5000/sensor-api-migration
-
 .PHONY: build-api
 build-api:
 	docker build -t sensor-api -f docker/Dockerfile.production . && \
 	docker image tag sensor-api neptune:5000/sensor-api
-
-.PHONY: push-migration
-push-migration:
-	docker push neptune:5000/sensor-api-migration
 
 .PHONY: push-api
 push-api:
 	docker push neptune:5000/sensor-api
 
 .PHONY: build-all
-build-all: build-api build-migration
+build-all: build-api
 
 .PHONY: push-all
-push-all: push-api push-migration
+push-all: push-api
 
 .PHONY: new-images
 new-images: build-all push-all
