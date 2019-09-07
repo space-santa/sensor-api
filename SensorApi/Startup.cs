@@ -33,7 +33,6 @@ namespace SensorApi
             var sqlConnectionString = Configuration.GetConnectionString("Default");
             services.AddEntityFrameworkNpgsql();
             services.AddDbContext<TemperatureContext>(options => options.UseNpgsql(sqlConnectionString));
-            services.BuildServiceProvider();
             services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<TemperatureContext>()
                 .AddDefaultUI()
