@@ -57,11 +57,11 @@ build-api:
 	docker image tag sensor-api neptune:5000/sensor-api
 
 .PHONY: push-migration
-push-nginx:
+push-migration:
 	docker push neptune:5000/sensor-api-migration
 
 .PHONY: push-api
-push-django:
+push-api:
 	docker push neptune:5000/sensor-api
 
 .PHONY: build-all
