@@ -41,7 +41,7 @@ namespace SensorApi.Controllers
             {
                 try
                 {
-                    var item = _context.TemperatureItems.Where(x => x.DeviceId == deviceId).Last();
+                    var item = _context.TemperatureItems.Where(x => x.DeviceId == deviceId).OrderByDescending(x => x.Timestamp).First();
                     retval.Add(item);
                 }
                 catch (InvalidOperationException)
