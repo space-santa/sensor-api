@@ -8,7 +8,7 @@
     <li class="nav-item">
         <a
             id="manage"
-            class="nav-link text-dark"
+            class="nav-link text-dark btn btn-link"
             asp-area="Identity"
             asp-page="/Account/Manage/Index"
             title="Manage"
@@ -37,7 +37,7 @@ else
 @if (SignInManager.IsSignedIn(User) && User.IsInRole("Administrator"))
 {
     <li class="nav-item">
-        <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register new device/user</a>
+        <a class="nav-link text-dark btn btn-link" id="register" asp-area="Identity" asp-page="/Account/Register">Register new device/user</a>
     </li>
 }
 </ul>
