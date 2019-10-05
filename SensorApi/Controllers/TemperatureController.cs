@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using SensorApi.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -35,9 +33,9 @@ namespace SensorApi.Controllers
         [AllowAnonymous]
         public List<TemperatureItem> GetLatest(int[] deviceIds)
         {
-            List<TemperatureItem> retval = new List<TemperatureItem>();
+            var retval = new List<TemperatureItem>();
 
-            foreach (int deviceId in deviceIds)
+            foreach (var deviceId in deviceIds)
             {
                 try
                 {

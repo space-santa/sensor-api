@@ -1,12 +1,12 @@
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using SensorApi.Models;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
+using SensorApi.Models;
 
 namespace SensorApi.Data
 {
@@ -86,7 +86,7 @@ namespace SensorApi.Data
                 new Device{Location="Living Room", Name="burglgrub"},
                 new Device{Location="Stairs", Name="BOULder4"},
             };
-            foreach (Device d in devices)
+            foreach (var d in devices)
             {
                 context.Devices.Add(d);
             }
@@ -104,7 +104,7 @@ namespace SensorApi.Data
                 new TemperatureItem{Temperature=19.34, Device=devices[1], Timestamp=DateTime.Parse("2017-12-01 12:41:56")},
                 new TemperatureItem{Temperature=20.34, Device=devices[2], Timestamp=DateTime.Parse("2017-12-01 12:42:56")},
             };
-            foreach (TemperatureItem t in temperatureItems)
+            foreach (var t in temperatureItems)
             {
                 context.TemperatureItems.Add(t);
             }
