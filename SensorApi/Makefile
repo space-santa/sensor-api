@@ -6,10 +6,6 @@ migrate-down:
 migrate-up:
 	docker-compose -f docker/docker-compose-files/docker-compose.migrate.yml up
 
-.PHONY: migrate-build
-migrate-build:
-	docker-compose -f docker/docker-compose-files/docker-compose.migrate.yml build
-
 .PHONY: prod-down
 prod-down:
 	docker-compose -f docker/docker-compose-files/docker-compose.production.yml down
@@ -18,10 +14,6 @@ prod-down:
 prod-up:
 	docker-compose -f docker/docker-compose-files/docker-compose.production.yml up -d
 
-.PHONY: prod-build
-prod-build:
-	docker-compose -f docker/docker-compose-files/docker-compose.production.yml build
-
 .PHONY: db-up
 db-up:
 	docker-compose -f docker/docker-compose-files/db.yml up
@@ -29,18 +21,6 @@ db-up:
 .PHONY: db-down
 db-down:
 	docker-compose -f docker/docker-compose-files/db.yml down
-
-.PHONY: lmig-down
-lmig-down:
-	docker-compose -f docker/docker-compose-files/docker-compose.local-migrate.yml down
-
-.PHONY: lmig-up
-lmig-up:
-	docker-compose -f docker/docker-compose-files/docker-compose.local-migrate.yml up
-
-.PHONY: lmig-build
-lmig-build:
-	docker-compose -f docker/docker-compose-files/docker-compose.local-migrate.yml build
 
 .PHONY: lprod-down
 lprod-down:
@@ -53,3 +33,21 @@ lprod-up:
 .PHONY: lprod-build
 lprod-build:
 	docker-compose -f docker/docker-compose-files/docker-compose.local-prod.yml build
+
+.PHONY: build-api
+build-api:
+	docker build -t sensor-api -f docker/Dockerfile.production . && \
+	docker image tag sensor-api neptune:5000/sensor-api
+
+.PHONY: push-api
+push-api:
+	docker push neptune:5000/sensor-api
+
+.PHONY: build-all
+build-all: build-api
+
+.PHONY: push-all
+push-all: push-api
+
+.PHONY: new-images
+new-images: build-all push-all

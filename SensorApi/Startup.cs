@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
-using Microsoft.Extensions.Configuration;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using SensorApi.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using SensorApi.Models;
 
 namespace SensorApi
 {
@@ -33,7 +27,6 @@ namespace SensorApi
             var sqlConnectionString = Configuration.GetConnectionString("Default");
             services.AddEntityFrameworkNpgsql();
             services.AddDbContext<TemperatureContext>(options => options.UseNpgsql(sqlConnectionString));
-            services.BuildServiceProvider();
             services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<TemperatureContext>()
                 .AddDefaultUI()
@@ -46,7 +39,7 @@ namespace SensorApi
                                     .Build();
                     config.Filters.Add(new AuthorizeFilter(policy));
                 }
-            ).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            ).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
             services.AddCors(
                 options => options.AddPolicy("AllowCors",
                 builder =>
@@ -60,7 +53,7 @@ namespace SensorApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -69,9 +62,21 @@ namespace SensorApi
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
-            app.UseAuthentication();
-            app.UseMvcWithDefaultRoute();
+
+            app.UseRouting();
+
             app.UseCors("AllowCors");
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
+            });
         }
     }
 }
