@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		LICENSE = LICENSE
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SensorBlazor", "SensorBlazor\SensorBlazor.csproj", "{40CBFEF8-A70E-4967-8C99-68F03680A57B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,18 @@ Global
 		{160A52C3-A58D-4EC5-A213-7927407CE4B1}.Release|x64.Build.0 = Release|Any CPU
 		{160A52C3-A58D-4EC5-A213-7927407CE4B1}.Release|x86.ActiveCfg = Release|Any CPU
 		{160A52C3-A58D-4EC5-A213-7927407CE4B1}.Release|x86.Build.0 = Release|Any CPU
+		{40CBFEF8-A70E-4967-8C99-68F03680A57B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40CBFEF8-A70E-4967-8C99-68F03680A57B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40CBFEF8-A70E-4967-8C99-68F03680A57B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{40CBFEF8-A70E-4967-8C99-68F03680A57B}.Debug|x64.Build.0 = Debug|Any CPU
+		{40CBFEF8-A70E-4967-8C99-68F03680A57B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{40CBFEF8-A70E-4967-8C99-68F03680A57B}.Debug|x86.Build.0 = Debug|Any CPU
+		{40CBFEF8-A70E-4967-8C99-68F03680A57B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40CBFEF8-A70E-4967-8C99-68F03680A57B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40CBFEF8-A70E-4967-8C99-68F03680A57B}.Release|x64.ActiveCfg = Release|Any CPU
+		{40CBFEF8-A70E-4967-8C99-68F03680A57B}.Release|x64.Build.0 = Release|Any CPU
+		{40CBFEF8-A70E-4967-8C99-68F03680A57B}.Release|x86.ActiveCfg = Release|Any CPU
+		{40CBFEF8-A70E-4967-8C99-68F03680A57B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
